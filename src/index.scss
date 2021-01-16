@@ -54,13 +54,14 @@ p {
 span {
 	font-size: 20px;
 }
+
 ::-webkit-scrollbar {
-	width: 4px !important;
+	width: 0px !important;
 	height: 6px;
 }
-
 /* Track */
 ::-webkit-scrollbar-track {
+	background-color: transparent;
 	border-radius: 6px;
 }
 
@@ -72,6 +73,7 @@ span {
 ::-webkit-scrollbar-corner {
 	display: none;
 }
+
 header {
 	padding-top: 40px;
 	display: flex;
@@ -116,5 +118,14 @@ main {
 	}
 	& + .hourly-section {
 		margin-left: 70px;
+	}
+}
+// sm screens
+@media (max-width: 420px) {
+	header {
+		flex-wrap: wrap;
+	}
+	main {
+		margin-top: 70px;
 	}
 }
