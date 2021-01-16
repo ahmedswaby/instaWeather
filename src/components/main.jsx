@@ -7,82 +7,95 @@ class Main extends React.Component {
         super(props);
         this.state = {
             temp: 'f',
-            view: 'h'
+            view: 'h',
+            currently: {},
+            days: []
         };
     }
 
     componentDidMount() {
-        navigator.geolocation.getCurrentPosition(this.showPosition)
-    }
-    //     function getWeatherAPI(apiLinkDS) {
-    //     fetch(apiLinkDS, {
-    //         method: 'GET',
-    //     }).then(function (response) {
-    //         return response.json()
-    //     }).then(function (data) {
-    //         temp.innerHTML = Math.round(data.currently.temperature);
-    //         cond.innerHTML = data.currently.summary;
-    //         weatherIcon(data.currently.icon);
-    //     });
-    // }
+        document.querySelector(".loader-wrapper").classList.remove('d-none')
+        navigator.geolocation.getCurrentPosition(this.showPosition,
+            () => {
+                alert('The Geolocation service failed')
+                document.querySelector(".loader-wrapper").classList.add('d-none')
 
+            })
+        const longEnUSFormatter = new Intl.DateTimeFormat('en-GB', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        })
+        this.setState({
+            todayDate: longEnUSFormatter.format(new Date())
+        })
+    }
+    // run after accepting location 
     showPosition = (position) => {
-        console.log(position.coords.latitude);
-        console.log(position.coords.longitude);
         this.fetchData(position)
     }
+    // fetch data deponds on the long & lat
     async fetchData(position) {
         const weatherUrl = `https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
-            'Access-Control-Allow-Origin': '*',
             method: 'GET',
-            credentials: 'include',
-            headers: new Headers()
         })
             .then((resp) => {
-                return resp
+                return resp.json()
             })
             .then((data) => {
+                document.querySelector(".loader-wrapper").classList.add('d-none')
                 console.log(data);
-                const result = data.json()
-                console.log(result);
+                this.setState({
+                    timeZone: data.timezone,
+                    currently: data.currently,
+                    days: data.daily.data,
+                    hours: data.hourly.data
+                })
+                console.log(this.state.currently);
+                console.log(this.state.days);
+                console.log(this.state.hours);
+                // console.log(currently);
+
             }).catch(err => {
                 console.log(err);
             })
 
     }
+    // toggle temp between C & F
     toggleTemp = (val) => {
-        if (val) {
-
-            this.setState({
-                temp: val
-            })
-        }
+        return Math.floor((val - 32) / 1.8)
     }
+    // toggle view depond on temp's C / F
     toggleView = (val) => {
-
+        this.setState({
+            temp: val
+        })
+    }
+    // toggle between days & hours tabs
+    toggleDaysandHr = (val) => {
         this.setState({
             view: val
         })
-
-        // if (val === "F") {
-        //     return Math.round(val * (9 / 5) + 32);
-        // }
-        // return Math.round((val - 32) * (5 / 9));
     }
+
     render() {
         return (
             <section>
+                <div className="loader-wrapper">
+                    <div className="loader"></div>
+                </div>
                 <div className='container'>
                     <header>
                         <h4 className="text-uppercase">
                             instaweather
                         </h4>
+                        {/* toggle temp from C to F & vise verse */}
                         <div className="d-flex ml-auto">
-                            <button className={`btn text-white ${this.state.temp === 'c' ? 'active' : ''}`} onClick={() => this.toggleTemp('c')}>
+                            <button key='c' className={`btn text-white ${this.state.temp === 'c' ? 'active' : ''}`} onClick={() => this.toggleView('c')}>
                                 C
                             </button>
-                            <button className={`btn text-white ${this.state.temp === 'f' ? 'active' : ''}`} onClick={(e) => this.toggleTemp('f')}>
+                            <button key='f' className={`btn text-white ${this.state.temp === 'f' ? 'active' : ''}`} onClick={() => this.toggleView('f')}>
                                 F
                             </button>
                         </div>
@@ -94,143 +107,74 @@ class Main extends React.Component {
                                     <h2>
                                         New Cairo
                                     </h2>
-                                    <span>Friday 20, 2020</span>
-                                    <img src={cloudy} alt="" className="mr-auto" />
+                                    <h5>
+                                        {this.state.timeZone}
+                                    </h5>
+                                    <span>{this.state.todayDate}</span>
+                                    {this.state.days.length > 0 ?
+                                        <img src={this.state.days[0].icon === 'partly-cloudy-day' ? cloudy : sunny} alt="" className="mr-auto" />
+                                        :
+                                        false
+                                    }
 
                                 </div>
                             </div>
                             <div className="col-md-6">
-                                <div className="align-content-end d-flex flex-column text-end">
-                                    <h1>72<sup>°</sup></h1>
-                                    <h3>81<sup>°</sup> / 63<sup>°</sup></h3>
-                                    <p>Cloudy throughout the day</p>
-                                </div>
+                                {this.state.days.length > 0 ?
+                                    <div className="align-content-end d-flex flex-column text-end">
+                                        {/* using first day to get min & max temp as it's not in the currently object */}
+                                        <h1>{this.state.temp === 'f' ? Math.floor(this.state.days[0].apparentTemperatureHigh)
+                                            : this.toggleTemp(this.state.days[0].apparentTemperatureHigh)}<sup>°</sup></h1>
+
+                                        {/* min & max temp */}
+                                        <h3>{this.state.temp === 'f' ? Math.floor(this.state.days[0].temperatureMax) : this.toggleTemp(this.state.days[0].temperatureMax)}<sup>°</sup> /
+
+                                        {this.state.temp === 'f' ? Math.floor(this.state.days[0].temperatureLow) : this.toggleTemp(this.state.days[0].temperatureLow)}<sup>°</sup></h3>
+                                        <p>{this.state.days[0].summary}</p>
+                                    </div>
+                                    :
+                                    false
+                                }
                             </div>
                         </div>
                         <div className="border-bottom mb-4">
                             <button className={`btn pl-0 pr-0 ${this.state.view === 'h' ? 'active' : ''}`}
-                                onClick={() => this.toggleView('h')}>
+                                onClick={() => this.toggleDaysandHr('h')}>
                                 hourly
                             </button>
-                            <button className={`btn ${this.state.view === 'd' ? 'active' : ''}`} onClick={() => this.toggleView('d')}>
+                            <button className={`btn ${this.state.view === 'd' ? 'active' : ''}`} onClick={() => this.toggleDaysandHr('d')}>
                                 daily
                             </button>
                         </div>
                         {this.state.view === 'h' ?
                             <div className="d-flex overflow-scroll pb-4">
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p>now</p>
-                                    <img src={cloudy} alt="cloudy day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
+                                {this.state.hours ?
+                                    // if condition to avoid getting undifined error
+                                    this.state.hours.map((hourData, index) =>
+                                        <div className="hourly-section" key={index}>
+                                            <p className="text-capitalize">{`${new Date(hourData.time * 1000).getHours().toLocaleString()}:00`}</p>
+                                            <img src={hourData.icon === "partly-cloudy-day" ? cloudy : sunny} alt="sunny day" />
+                                            <h4>{this.state.temp === 'f' ? Math.floor(hourData.apparentTemperature) : this.toggleTemp(hourData.apparentTemperature)}<sup>°</sup></h4>
+                                        </div>)
+                                    : false
+                                }
                             </div>
                             :
-                            <div className="d-flex overflow-scroll pb-4">
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">Today</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
+                            this.state.days ?
+                                <div className="d-flex overflow-scroll pb-4">
+                                    {this.state.days.map((day, index) =>
+                                        <div className="hourly-section" key={index}>
+                                            <p className="text-capitalize">{new Date(day.time * 1000).getDate().toLocaleString()}</p>
+                                            <img src={day.icon === "partly-cloudy-day" ? cloudy : sunny} alt="sunny day" />
+                                            <h4>{this.state.temp === 'f' ? Math.floor(day.temperatureHigh) : this.toggleTemp(day.temperatureHigh)}<sup>°</sup></h4>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                                <div className="hourly-section">
-                                    <p className="text-capitalize">now</p>
-                                    <img src={sunny} alt="sunny day" />
-                                    <h4>81<sup>°</sup></h4>
-                                </div>
-                            </div>
+                                : false
                         }
                     </main>
                 </div>
-            </section >
+            </section>
         )
     }
 }
