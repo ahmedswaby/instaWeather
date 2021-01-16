@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/instaweather/static/css/main.cdc3323b.chunk.css",
+    "main.css": "/instaweather/static/css/main.965cda3d.chunk.css",
     "main.js": "/instaweather/static/js/main.032fd72f.chunk.js",
     "main.js.map": "/instaweather/static/js/main.032fd72f.chunk.js.map",
     "runtime-main.js": "/instaweather/static/js/runtime-main.62f688f4.js",
@@ -12,7 +12,7 @@
     "static/js/3.a418c88f.chunk.js.map": "/instaweather/static/js/3.a418c88f.chunk.js.map",
     "index.html": "/instaweather/index.html",
     "static/css/2.f98e01ea.chunk.css.map": "/instaweather/static/css/2.f98e01ea.chunk.css.map",
-    "static/css/main.cdc3323b.chunk.css.map": "/instaweather/static/css/main.cdc3323b.chunk.css.map",
+    "static/css/main.965cda3d.chunk.css.map": "/instaweather/static/css/main.965cda3d.chunk.css.map",
     "static/js/2.81a802db.chunk.js.LICENSE.txt": "/instaweather/static/js/2.81a802db.chunk.js.LICENSE.txt",
     "static/media/index.scss": "/instaweather/static/media/Background.027cc150.jpg",
     "static/media/cloudy.799926f7.svg": "/instaweather/static/media/cloudy.799926f7.svg",
@@ -22,7 +22,7 @@
     "static/js/runtime-main.62f688f4.js",
     "static/css/2.f98e01ea.chunk.css",
     "static/js/2.81a802db.chunk.js",
-    "static/css/main.cdc3323b.chunk.css",
+    "static/css/main.965cda3d.chunk.css",
     "static/js/main.032fd72f.chunk.js"
   ]
 }
