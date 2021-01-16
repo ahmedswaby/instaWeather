@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/instaweather/static/css/main.cdc3323b.chunk.css",
-    "main.js": "/instaweather/static/js/main.0527c89b.chunk.js",
-    "main.js.map": "/instaweather/static/js/main.0527c89b.chunk.js.map",
+    "main.js": "/instaweather/static/js/main.032fd72f.chunk.js",
+    "main.js.map": "/instaweather/static/js/main.032fd72f.chunk.js.map",
     "runtime-main.js": "/instaweather/static/js/runtime-main.62f688f4.js",
     "runtime-main.js.map": "/instaweather/static/js/runtime-main.62f688f4.js.map",
     "static/css/2.f98e01ea.chunk.css": "/instaweather/static/css/2.f98e01ea.chunk.css",
@@ -23,6 +23,6 @@
     "static/css/2.f98e01ea.chunk.css",
     "static/js/2.81a802db.chunk.js",
     "static/css/main.cdc3323b.chunk.css",
-    "static/js/main.0527c89b.chunk.js"
+    "static/js/main.032fd72f.chunk.js"
   ]
 }

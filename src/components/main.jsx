@@ -36,7 +36,7 @@ class Main extends React.Component {
     }
     // fetch data deponds on the long & lat
     async fetchData(position) {
-        const weatherUrl = `https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
+        const weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
         })
@@ -45,17 +45,12 @@ class Main extends React.Component {
             })
             .then((data) => {
                 document.querySelector(".loader-wrapper").classList.add('d-none')
-                console.log(data);
                 this.setState({
                     timeZone: data.timezone,
-                    currently: data.currently,
                     days: data.daily.data,
                     hours: data.hourly.data
                 })
-                console.log(this.state.currently);
-                console.log(this.state.days);
                 console.log(this.state.hours);
-                // console.log(currently);
 
             }).catch(err => {
                 console.log(err);
@@ -105,11 +100,8 @@ class Main extends React.Component {
                             <div className="col-md-6">
                                 <div className="d-flex flex-column">
                                     <h2>
-                                        New Cairo
-                                    </h2>
-                                    <h5>
                                         {this.state.timeZone}
-                                    </h5>
+                                    </h2>
                                     <span>{this.state.todayDate}</span>
                                     {this.state.days.length > 0 ?
                                         <img src={this.state.days[0].icon === 'partly-cloudy-day' ? cloudy : sunny} alt="" className="mr-auto" />
