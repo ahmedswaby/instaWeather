@@ -21,7 +21,7 @@ class Main extends React.Component {
                 alert('location services failed due to unknown error, please try again later')
                 document.querySelector(".loader-wrapper").classList.add('d-none')
 
-            }, { timeout: 20000 })
+            }, { timeout: 100000 })
         const longEnUSFormatter = new Intl.DateTimeFormat('en-GB', {
             year: 'numeric',
             month: 'long',
