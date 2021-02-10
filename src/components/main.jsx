@@ -18,10 +18,10 @@ class Main extends React.Component {
         // document.querySelector(".loader-wrapper").classList.remove('d-none')
         navigator.geolocation.getCurrentPosition(this.showPosition,
             () => {
-                alert('location services failed due to unknown error, please try again later')
                 document.querySelector(".loader-wrapper").classList.add('d-none')
-
+                alert('location services failed due to unknown error, please try again later')
             }, { timeout: 100000 })
+
         const longEnUSFormatter = new Intl.DateTimeFormat('en-GB', {
             year: 'numeric',
             month: 'long',
@@ -38,8 +38,8 @@ class Main extends React.Component {
     }
     // fetch data deponds on the long & lat
     async fetchData(position) {
-        console.log('here');
-        const weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
+        // https://cors-anywhere.herokuapp.com/
+        const weatherUrl = `https://thingproxy.freeboard.io/fetch/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
         })
