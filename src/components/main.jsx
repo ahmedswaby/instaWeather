@@ -14,13 +14,14 @@ class Main extends React.Component {
     }
 
     componentDidMount() {
-        document.querySelector(".loader-wrapper").classList.remove('d-none')
+        // if (navigator.geolocation) {
+        // document.querySelector(".loader-wrapper").classList.remove('d-none')
         navigator.geolocation.getCurrentPosition(this.showPosition,
             () => {
-                alert('The Geolocation service failed')
+                alert('location services failed due to unknown error, please try again later')
                 document.querySelector(".loader-wrapper").classList.add('d-none')
 
-            })
+            }, { timeout: 10000 })
         const longEnUSFormatter = new Intl.DateTimeFormat('en-GB', {
             year: 'numeric',
             month: 'long',
@@ -30,13 +31,17 @@ class Main extends React.Component {
             todayDate: longEnUSFormatter.format(new Date())
         })
     }
+    // }
     // run after accepting location 
     showPosition = (position) => {
-        this.fetchData(position)
+        console.log(position);
+        // this.fetchData(position)
     }
     // fetch data deponds on the long & lat
     async fetchData(position) {
-        const weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
+        console.log('here');
+
+        const weatherUrl = `https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
         })
@@ -44,6 +49,7 @@ class Main extends React.Component {
                 return resp.json()
             })
             .then((data) => {
+                console.log('here');
                 document.querySelector(".loader-wrapper").classList.add('d-none')
                 this.setState({
                     timeZone: data.timezone,
@@ -53,6 +59,7 @@ class Main extends React.Component {
                 console.log(this.state.hours);
 
             }).catch(err => {
+                document.querySelector(".loader-wrapper").classList.add('d-none')
                 console.log(err);
             })
 
