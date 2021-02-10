@@ -34,13 +34,11 @@ class Main extends React.Component {
     // }
     // run after accepting location 
     showPosition = (position) => {
-        console.log(position);
-        // this.fetchData(position)
+        this.fetchData(position)
     }
     // fetch data deponds on the long & lat
     async fetchData(position) {
         console.log('here');
-
         const weatherUrl = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
