@@ -39,7 +39,7 @@ class Main extends React.Component {
     // fetch data deponds on the long & lat
     async fetchData(position) {
         // https://cors-anywhere.herokuapp.com/
-        const weatherUrl = `https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
+        const weatherUrl = `https://thingproxy.freeboard.io/fetch/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
             'Access-Control-Allow-Origin': 'https://ahmedswaby.github.io'
