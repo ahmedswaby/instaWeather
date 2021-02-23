@@ -42,7 +42,9 @@ class Main extends React.Component {
         const weatherUrl = `https://thingproxy.freeboard.io/fetch/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
-            'Access-Control-Allow-Origin': 'https://ahmedswaby.github.io'
+            headers: {
+                'Access-Control-Allow-Origin': 'https://ahmedswaby.github.io'
+            },
         })
             .then((resp) => {
                 return resp.json()
