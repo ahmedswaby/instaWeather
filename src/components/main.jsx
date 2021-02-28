@@ -14,6 +14,7 @@ class Main extends React.Component {
     }
 
     componentDidMount() {
+        console.log(process.env.PORT)
         // if (navigator.geolocation) {
         // document.querySelector(".loader-wrapper").classList.remove('d-none')
         navigator.geolocation.getCurrentPosition(this.showPosition,
@@ -39,7 +40,7 @@ class Main extends React.Component {
     // fetch data deponds on the long & lat
     async fetchData(position) {
         // https://cors-anywhere.herokuapp.com/
-        const weatherUrl = `https://thingproxy.freeboard.io/fetch/https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
+        const weatherUrl = `${process.env.PORT ? process.env.PORT / 'testAPI/' : 'https://thingproxy.freeboard.io/fetch/'}https://api.darksky.net/forecast/a177f8481c31fa96c3f95ad4f4f84610/${position.coords.latitude},${position.coords.longitude}/`
         await fetch(weatherUrl, {
             method: 'GET',
             headers: {
